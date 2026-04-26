@@ -13,6 +13,7 @@ export default function App() {
   const [selectedRobux, setSelectedRobux] = useState(null);
   const [winners, setWinners] = useState(getWinners);
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [modalWinner, setModalWinner] = useState(null);
 
@@ -42,15 +43,28 @@ export default function App() {
     }
   }
 
-  function registerWinner() {
-    if (!canRegister) return;
+  async function registerWinner() {
+    if (!canRegister || isSubmitting) return;
+
+    const userToRegister = currentUser;
+    const robuxToRegister = selectedRobux;
+
+    setIsSubmitting(true);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5000);
+    });
+
+    if (!userToRegister || !robuxToRegister) {
+      setIsSubmitting(false);
+      return;
+    }
 
     const winner = {
       id: Date.now(),
-      username: currentUser.username,
-      userId: currentUser.userId,
-      avatarUrl: currentUser.avatarUrl,
-      robux: selectedRobux,
+      username: userToRegister.username,
+      userId: userToRegister.userId,
+      avatarUrl: userToRegister.avatarUrl,
+      robux: robuxToRegister,
       date: new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' })
     };
 
@@ -62,6 +76,7 @@ export default function App() {
     setSelectedRobux(null);
     setUsernameInput('');
     setError('');
+    setIsSubmitting(false);
   }
 
   function deleteWinner(id) {
@@ -111,13 +126,14 @@ export default function App() {
                 id="usernameInput"
                 placeholder="Username de Roblox..."
                 autoComplete="off"
+                disabled={loading || isSubmitting}
                 value={usernameInput}
                 onChange={(event) => setUsernameInput(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter') searchUser();
+                  if (event.key === 'Enter' && !isSubmitting) searchUser();
                 }}
               />
-              <button className="btn btn-primary" id="searchBtn" onClick={searchUser} disabled={loading}>
+              <button className="btn btn-primary" id="searchBtn" onClick={searchUser} disabled={loading || isSubmitting}>
                 {loading ? '...' : 'BUSCAR'}
               </button>
             </div>
@@ -125,11 +141,18 @@ export default function App() {
             <AvatarPreview loading={loading} error={error} currentUser={currentUser} />
 
             <div className="section-title"><RobloxLogo className="rbx-inline" size={13} /> Premio</div>
-            <RobuxSelector selectedRobux={selectedRobux} onSelect={setSelectedRobux} />
+            <RobuxSelector selectedRobux={selectedRobux} onSelect={setSelectedRobux} disabled={isSubmitting} />
 
-            <button className="btn btn-success" id="registerBtn" onClick={registerWinner} disabled={!canRegister}>
-              ENVIAR
+            <button className="btn btn-success" id="registerBtn" onClick={registerWinner} disabled={!canRegister || isSubmitting}>
+              {isSubmitting ? 'ENVIANDO...' : 'ENVIAR'}
             </button>
+            {isSubmitting ? (
+              <div className="submit-loading" role="status" aria-live="polite">
+                <div className="submit-loading-spinner" />
+                <span>Procesando solicitud...</span>
+                <div className="submit-loading-bar" />
+              </div>
+            ) : null}
           </div>
 
         </div>

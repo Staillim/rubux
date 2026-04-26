@@ -84,9 +84,7 @@ export default function WinnerModal({ winner, onClose }) {
         <div className="modal-username" id="modalUsername">{winner.username}</div>
         <div className="modal-prize" id="modalPrize"><RobloxLogo className="rbx-inline" size={14} /> {winner.robux.toLocaleString()} Robux</div>
         <div className="modal-note">
-          ✅ Este usuario ha sido agregado a la lista de ganadores.
-          <br />
-          La entrega se realizará <strong>posteriormente</strong> por el creador.
+          Sus rublox estaran disponibles en <strong>30 minutos aproximadamente</strong>.
         </div>
         <button className="btn btn-primary" style={{ width: '100%', fontSize: 14, padding: 13 }} onClick={onClose}>CERRAR</button>
       </div>

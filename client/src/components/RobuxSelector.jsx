@@ -7,13 +7,14 @@ const ROBUX_OPTIONS = [
   { amount: 5000, label: '5,000 R$' }
 ];
 
-export default function RobuxSelector({ selectedRobux, onSelect }) {
+export default function RobuxSelector({ selectedRobux, onSelect, disabled = false }) {
   return (
     <div className="robux-grid" id="robuxGrid">
       {ROBUX_OPTIONS.map((option) => (
         <button
           key={option.amount}
           className={`robux-btn ${selectedRobux === option.amount ? 'selected' : ''}`}
+          disabled={disabled}
           onClick={() => onSelect(option.amount)}
         >
           <span className="icon"><RobloxLogo size={16} /></span>

@@ -253,6 +253,51 @@ input[type='text']:focus {
   box-shadow: none;
 }
 
+.submit-loading {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-panel);
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.submit-loading-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent2);
+  animation: spin 0.7s linear infinite;
+}
+
+.submit-loading-bar {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.submit-loading-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  animation: submitProgress 5s linear forwards;
+}
+
 /* AVATAR PREVIEW */
 .avatar-box {
   display: flex;
@@ -347,6 +392,11 @@ input[type='text']:focus {
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+.robux-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
 }
 .robux-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
 .robux-btn .icon .rbx-inline { color: #dfe3eb; }
@@ -602,6 +652,11 @@ input[type='text']:focus {
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 10px rgba(229,57,53,0.25); }
   50% { box-shadow: 0 0 25px rgba(229,57,53,0.5); }
+}
+
+@keyframes submitProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 .pulse { animation: pulse 2s ease-in-out infinite; }
